@@ -12,7 +12,7 @@ export default () => {
     });
 
     //El observer tiene la siguiente struvture
-    const observer = {
+    const git = {
         next: event => displayLog(event),
         error: err => console.log('[ERR]-',err),
         complete: () => displayLog("[DONE]")
