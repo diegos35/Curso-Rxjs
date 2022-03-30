@@ -1,6 +1,11 @@
 import { updateDisplay } from './utils';
-import { fromEvent } from 'rxjs';
+import { fromEvent, Subject, BehaviorSubject } from 'rxjs';
 import { map, tap, share } from 'rxjs/operators';
+
+/*Subject tipo de Observable, actua como distribuidor
+/emite a todos sus observadores cualquier evento que emite como observer **/
+
+/* BehaviorSubject: siempre tiene un valor un estado o valor inicial */
 
 export default () => {
     /** start coding */
@@ -25,16 +30,29 @@ export default () => {
             const docHeight = docElement.scrollHeight - docElement.clientHeight;
             return (evt / docHeight) * 100;
         }),
-        share()
+        //share()//utiliza la clase Subject internamente
     )
 
+
+    //Example BehaviorSubject
+    const scrollProgressHot$ = new BehaviorSubject(0);
+    //--------------------------------------------------
+    
+    //Example Subject
+    //const scrollProgressHot$ = new Subject(); //Observer
+    scrollProgress$.subscribe(scrollProgressHot$)
+
+
     //subscribe to scroll progress to paint a progress bar
-    const subscription = scrollProgress$.subscribe(updateProgressBar);
+    const subscription = scrollProgressHot$.subscribe(updateProgressBar);
 
     //subscribe to display scroll progress percentage
-    const subscription2 = scrollProgress$.subscribe(
+    const subscription2 = scrollProgressHot$.subscribe(
         val => updateDisplay(`${ Math.floor(val) } %`)
     );
+    
+    console.log("scroll initial state:", scrollProgressHot$.value);
+    //scrollProgressHot$.next(0); //con BehaviorSubject me evito esto
 
     /** end coding */
 }
