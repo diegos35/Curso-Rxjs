@@ -1,6 +1,6 @@
 import { updateDisplay } from './utils';
 import { fromEvent } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, share } from 'rxjs/operators';
 
 export default () => {
     /** start coding */
@@ -14,8 +14,8 @@ export default () => {
     }
 
     //observable that returns scroll (from top) on scroll events
-    const scroll$ = fromEvent(document, 'scroll').pipe(
-        map(() => docElement.scrollTop),
+    const scroll$ = fromEvent(document, 'scroll').pipe(//detecta event scroll sobre el document
+        map(() => docElement.scrollTop),//emite el valor de scroll
         tap(evt => console.log("[scroll]: ", evt))
     );
 
@@ -23,13 +23,18 @@ export default () => {
     const scrollProgress$ = scroll$.pipe(
         map(evt => {
             const docHeight = docElement.scrollHeight - docElement.clientHeight;
-            return (evt / docHeight) * 100;
-        })
+            return (evt / docHeight) * 100; 
+        }),
+        share() //Hot Observable
     )
-
+    
+    //Cold Observable
     //subscribe to scroll progress to paint a progress bar
-    const subscription = scrollProgress$.subscribe(updateProgressBar);
-
+    const subscription = scrollProgress$.subscribe(updateProgressBar); //las dos subscription son 2 instacias del flujo de datos
+    
+    const subscription2 = scrollProgress$.subscribe(
+        val => updateDisplay(`${Math.floor(val)} % `) //return % en funcion del scroll 
+    ) 
 
     /** end coding */
 }
