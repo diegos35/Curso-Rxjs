@@ -1,7 +1,9 @@
 import { updateDisplay } from './utils';
 import { fromEvent } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, delay, bufferTime } from 'rxjs/operators';
 
+//delay introduce un retraso entre el origen de los eventos y el flujo de salida observable
+//BufferTime acumlar muestras durante un  tiempo determinado y despues las emite todas juntas en un array osea unico evento
 export default () => {
     /** start coding */
     
@@ -24,7 +26,10 @@ export default () => {
         map(evt => {
             const docHeight = docElement.scrollHeight - docElement.clientHeight;
             return (evt / docHeight) * 100;
-        })
+        }),
+        //delay(500)
+        bufferTime(500),
+        tap(event => console.log('[buffer:]',event))
     )
 
     //subscribe to scroll progress to paint a progress bar
