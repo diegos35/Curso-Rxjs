@@ -1,6 +1,7 @@
 import { updateDisplay } from './utils';
 import { fromEvent } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, sampleTimem, auditTime, throttleTime  } from 'rxjs/operators'; 
+//simpleTime comprueba el valor cada el valor cada sierto intervalo
 
 export default () => {
     /** start coding */
@@ -15,6 +16,10 @@ export default () => {
 
     //observable that returns scroll (from top) on scroll events
     const scroll$ = fromEvent(document, 'scroll').pipe(
+        tap(event => console.log('[scroll event]')),
+        //sampleTime(50),//cada 50 ms
+        //auditTime(50),
+        throttleTime(50),
         map(() => docElement.scrollTop),
         tap(evt => console.log("[scroll]: ", evt))
     );
