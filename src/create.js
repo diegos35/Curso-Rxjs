@@ -12,7 +12,7 @@ export default () => {
     });
 
     //El observer tiene la siguiente struvture
-    const git = {
+    const observer = {
         next: event => displayLog(event),
         error: err => console.log('[ERR]-',err),
         complete: () => displayLog("[DONE]")
@@ -22,7 +22,7 @@ export default () => {
     //const subscribe = hello.subscribe(evt => displayLog(evt));
     const subscribe = hello.subscribe(observer);    
     const subscribe2 = hello.subscribe(observer);    
-    hello.unsubscribe();  
+    subscribe.unsubscribe();  
     
     
     /** end coding */
